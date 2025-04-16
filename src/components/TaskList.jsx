@@ -43,8 +43,8 @@ const TaskList = ({ tasks, onDeleteClick, onToggleTaskStatus }) => {
             edge="end"
             color="error"
             onClick={(e) => {
-              e.stopPropagation(); // Prevent navigating to task details
-              onDeleteClick(task); // Trigger delete confirmation
+              e.stopPropagation();
+              onDeleteClick(task);
             }}
           >
             <DeleteIcon />

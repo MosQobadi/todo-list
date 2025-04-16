@@ -26,8 +26,8 @@ const Home = () => {
   const [selectedCategory, setSelectedCategory] = useState("All");
   const [selectedStatus, setSelectedStatus] = useState("All");
   const [isDialogOpen, setIsDialogOpen] = useState(false);
-  const [taskToDelete, setTaskToDelete] = useState(null); // Track task to delete
-  const [searchQuery, setSearchQuery] = useState(""); // New state for search query
+  const [taskToDelete, setTaskToDelete] = useState(null);
+  const [searchQuery, setSearchQuery] = useState("");
   const tasks = useSelector((state) => state.tasks.tasks);
   const navigate = useNavigate();
   const dispatch = useDispatch();
@@ -58,7 +58,6 @@ const Home = () => {
   };
 
   const onToggleTaskStatus = (taskId) => {
-    // Dispatch the action to toggle the task status
     dispatch(toggleTaskStatus(taskId));
   };
 
@@ -127,7 +126,7 @@ const Home = () => {
       <TaskList
         tasks={filteredTasks}
         onDeleteClick={handleDeleteConfirmation}
-        onToggleTaskStatus={onToggleTaskStatus} // Pass the function to TaskList
+        onToggleTaskStatus={onToggleTaskStatus}
       />
 
       {/* Delete Confirmation Dialog */}
