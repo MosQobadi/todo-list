@@ -13,7 +13,8 @@ const TaskItem = ({ task }) => {
     dispatch(toggleTaskStatus(task.id));
   };
 
-  const handleDelete = () => {
+  const handleDelete = (e) => {
+    e.stopPropagation(); // prevent triggering navigation
     dispatch(deleteTask(task.id));
   };
 
@@ -27,16 +28,15 @@ const TaskItem = ({ task }) => {
         display: "flex",
         alignItems: "center",
         justifyContent: "space-between",
+        cursor: "pointer",
       }}
-      primary={task.title}
-      secondary={`${task.description} — [${task.category}]`}
-      secondaryAction={
-        <IconButton edge="end" aria-label="delete" onClick={handleDelete}>
-          <DeleteIcon />
-        </IconButton>
-      }
+      onClick={handleNavigate}
     >
-      <Checkbox checked={task.status === "completed"} onChange={handleToggle} />
+      <Checkbox
+        checked={task.status === "completed"}
+        onChange={handleToggle}
+        onClick={(e) => e.stopPropagation()} // prevent checkbox click from triggering navigation
+      />
       <ListItemText
         primary={task.title}
         secondary={
@@ -49,12 +49,13 @@ const TaskItem = ({ task }) => {
             <strong>Category:</strong> {task.category}
           </>
         }
-        onClick={handleNavigate}
         sx={{
-          cursor: "pointer",
           textDecoration: task.status === "completed" ? "line-through" : "none",
         }}
       />
+      <IconButton edge="end" aria-label="delete" onClick={handleDelete}>
+        <DeleteIcon />
+      </IconButton>
     </ListItem>
   );
 };

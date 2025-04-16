@@ -16,6 +16,7 @@ import {
   DialogContent,
   DialogContentText,
   DialogTitle,
+  TextField,
 } from "@mui/material";
 import TaskList from "../components/TaskList";
 
@@ -23,16 +24,26 @@ const categories = ["All", "Work", "Personal", "Education", "Health", "Other"];
 
 const Home = () => {
   const [selectedCategory, setSelectedCategory] = useState("All");
+  const [selectedStatus, setSelectedStatus] = useState("All");
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [taskToDelete, setTaskToDelete] = useState(null); // Track task to delete
+  const [searchQuery, setSearchQuery] = useState(""); // New state for search query
   const tasks = useSelector((state) => state.tasks.tasks);
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
-  const filteredTasks =
-    selectedCategory === "All"
-      ? tasks
-      : tasks.filter((task) => task.category === selectedCategory);
+  // Filter tasks based on category and search query
+  const filteredTasks = tasks.filter((task) => {
+    const matchesCategory =
+      selectedCategory === "All" || task.category === selectedCategory;
+
+    const matchesStatus =
+      selectedStatus === "All" ||
+      (selectedStatus === "Completed" && task.status === "completed") ||
+      (selectedStatus === "Pending" && task.status === "pending");
+
+    return matchesCategory && matchesStatus;
+  });
 
   const handleDeleteConfirmation = (task) => {
     setTaskToDelete(task);
@@ -70,6 +81,16 @@ const Home = () => {
         </Button>
       </Box>
 
+      {/* Search Bar */}
+      <TextField
+        label="Search Tasks"
+        variant="outlined"
+        fullWidth
+        value={searchQuery}
+        onChange={(e) => setSearchQuery(e.target.value)}
+        margin="normal"
+      />
+
       {/* Filter Dropdown */}
       <FormControl fullWidth margin="normal">
         <InputLabel id="filter-category-label">Filter by Category</InputLabel>
@@ -82,6 +103,21 @@ const Home = () => {
           {categories.map((cat) => (
             <MenuItem key={cat} value={cat}>
               {cat}
+            </MenuItem>
+          ))}
+        </Select>
+      </FormControl>
+      <FormControl fullWidth margin="normal">
+        <InputLabel id="filter-status-label">Filter by Status</InputLabel>
+        <Select
+          labelId="filter-status-label"
+          value={selectedStatus}
+          onChange={(e) => setSelectedStatus(e.target.value)}
+          label="Filter by Status"
+        >
+          {["All", "Pending", "Completed"].map((status) => (
+            <MenuItem key={status} value={status}>
+              {status}
             </MenuItem>
           ))}
         </Select>

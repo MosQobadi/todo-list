@@ -22,16 +22,21 @@ const TaskList = ({ tasks, onDeleteClick, onToggleTaskStatus }) => {
         <ListItem
           key={task.id}
           divider
-          button // This makes the list item clickable
-          onClick={() => handleTaskClick(task.id)} // Navigate to task details
+          onClick={() => handleTaskClick(task.id)}
+          sx={{ cursor: "pointer" }}
         >
           <ListItemText
             primary={task.title}
             secondary={`Category: ${task.category}`}
+            sx={{
+              textDecoration:
+                task.status === "completed" ? "line-through" : "none",
+            }}
           />
           <Checkbox
             checked={task.status === "completed"}
-            onChange={() => onToggleTaskStatus(task.id)} // Toggle status on click
+            onClick={(e) => e.stopPropagation()}
+            onChange={() => onToggleTaskStatus(task.id)}
             color="primary"
           />
           <IconButton
