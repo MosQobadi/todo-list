@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate, useParams } from "react-router-dom";
-import { addTask, updateTask } from "../features/tasks/tasksSlice";
+import { addTask, updateTask, deleteTask } from "../features/tasks/tasksSlice";
 import {
   Box,
   Button,
@@ -12,6 +12,11 @@ import {
   Select,
   InputLabel,
   FormControl,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogContentText,
+  DialogTitle,
 } from "@mui/material";
 
 const TaskDetails = () => {
@@ -30,11 +35,13 @@ const TaskDetails = () => {
   const categories = ["Work", "Personal", "Education", "Health", "Other"];
   const [category, setCategory] = useState("Work");
 
+  const [isDialogOpen, setIsDialogOpen] = useState(false);
+
   useEffect(() => {
     if (!isNew && taskToEdit) {
       setTitle(taskToEdit.title);
       setDescription(taskToEdit.description);
-      setCategory(taskToEdit.category || "Work"); // Default if not set
+      setCategory(taskToEdit.category || "Work");
     }
   }, [isNew, taskToEdit]);
 
@@ -42,14 +49,17 @@ const TaskDetails = () => {
     e.preventDefault();
     if (!title.trim()) return;
 
-    // const payload = ;
-
     if (isNew) {
       dispatch(addTask({ title, description, category }));
     } else {
-      dispatch(updateTask({ id, ...{ title, description, category } }));
+      dispatch(updateTask({ id, title, description, category }));
     }
 
+    navigate("/");
+  };
+
+  const handleDelete = () => {
+    dispatch(deleteTask(id));
     navigate("/");
   };
 
@@ -105,13 +115,44 @@ const TaskDetails = () => {
               ))}
             </Select>
           </FormControl>
-          <Box display="flex" justifyContent="flex-end" mt={2}>
+
+          <Box
+            display="flex"
+            justifyContent={isNew ? "flex-end" : "space-between"}
+            mt={3}
+          >
+            {!isNew && (
+              <Button
+                variant="outlined"
+                color="error"
+                onClick={() => setIsDialogOpen(true)}
+              >
+                Delete Task
+              </Button>
+            )}
             <Button type="submit" variant="contained">
               {isNew ? "Add Task" : "Update Task"}
             </Button>
           </Box>
         </form>
       </Box>
+
+      {/* Delete Confirmation Dialog */}
+      <Dialog open={isDialogOpen} onClose={() => setIsDialogOpen(false)}>
+        <DialogTitle>Delete Task</DialogTitle>
+        <DialogContent>
+          <DialogContentText>
+            Are you sure you want to delete this task? This action cannot be
+            undone.
+          </DialogContentText>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={() => setIsDialogOpen(false)}>Cancel</Button>
+          <Button color="error" onClick={handleDelete}>
+            Delete
+          </Button>
+        </DialogActions>
+      </Dialog>
     </Container>
   );
 };
