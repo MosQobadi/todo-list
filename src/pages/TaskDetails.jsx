@@ -79,7 +79,18 @@ const TaskDetails = () => {
   return (
     <Container maxWidth="sm">
       <Box my={4}>
-        <Typography variant="h5" gutterBottom>
+        <Typography
+          sx={{
+            fontSize: {
+              xs: "1.8rem",
+              sm: "2rem",
+              md: "2.5rem",
+            },
+            fontWeight: 600,
+          }}
+          variant="h5"
+          gutterBottom
+        >
           {isNew ? "Add New Task" : "Edit Task"}
         </Typography>
         <form onSubmit={handleSubmit}>
@@ -147,6 +158,7 @@ const TaskDetails = () => {
           </DialogContentText>
         </DialogContent>
         <DialogActions>
+          <Button></Button>
           <Button onClick={() => setIsDialogOpen(false)}>Cancel</Button>
           <Button color="error" onClick={handleDelete}>
             Delete

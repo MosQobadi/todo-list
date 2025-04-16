@@ -18,7 +18,7 @@ import {
   DialogTitle,
   TextField,
 } from "@mui/material";
-import TaskList from "../components/TaskList";
+import TaskList from "../features/tasks/TaskList";
 
 const categories = ["All", "Work", "Personal", "Education", "Health", "Other"];
 
@@ -42,7 +42,13 @@ const Home = () => {
       (selectedStatus === "Completed" && task.status === "completed") ||
       (selectedStatus === "Pending" && task.status === "pending");
 
-    return matchesCategory && matchesStatus;
+    const searchLower = searchQuery.toLowerCase();
+    const matchesSearch =
+      task.title.toLowerCase().includes(searchLower) ||
+      task.description.toLowerCase().includes(searchLower) ||
+      task.category.toLowerCase().includes(searchLower);
+
+    return matchesCategory && matchesStatus && matchesSearch;
   });
 
   const handleDeleteConfirmation = (task) => {
@@ -70,7 +76,18 @@ const Home = () => {
         mt={4}
         mb={2}
       >
-        <Typography variant="h4">Task Manager</Typography>
+        <Typography
+          sx={{
+            fontSize: {
+              xs: "1.8rem",
+              sm: "2rem",
+              md: "2.5rem",
+            },
+            fontWeight: 600,
+          }}
+        >
+          Task Manager
+        </Typography>
         <Button
           variant="contained"
           color="primary"
@@ -123,11 +140,17 @@ const Home = () => {
       </FormControl>
 
       {/* Filtered Task List */}
-      <TaskList
-        tasks={filteredTasks}
-        onDeleteClick={handleDeleteConfirmation}
-        onToggleTaskStatus={onToggleTaskStatus}
-      />
+      {filteredTasks.length > 0 ? (
+        <TaskList
+          tasks={filteredTasks}
+          onDeleteClick={handleDeleteConfirmation}
+          onToggleTaskStatus={onToggleTaskStatus}
+        />
+      ) : (
+        <Typography variant="h6" align="center" color="text.secondary" mt={4}>
+          No tasks found matching your filters or search.
+        </Typography>
+      )}
 
       {/* Delete Confirmation Dialog */}
       <Dialog open={isDialogOpen} onClose={() => setIsDialogOpen(false)}>
