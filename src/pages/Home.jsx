@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 import { deleteTask, toggleTaskStatus } from "../features/tasks/tasksSlice";
 import {
   Container,
@@ -19,6 +19,7 @@ import {
   TextField,
 } from "@mui/material";
 import TaskList from "../features/tasks/TaskList";
+import GitHubIcon from "@mui/icons-material/GitHub";
 
 const categories = ["All", "Work", "Personal", "Education", "Health", "Other"];
 
@@ -86,6 +87,15 @@ const Home = () => {
             fontWeight: 600,
           }}
         >
+          <Link
+            to="https://github.com/MosQobadi/todo-list"
+            target="_blank"
+            rel="noopener noreferrer"
+            // className="link-no-visited"
+            style={{ textDecoration: "none", color: "inherit" }}
+          >
+            <GitHubIcon sx={{ fontSize: 40, marginRight: 3 }} />
+          </Link>
           Task Manager
         </Typography>
         <Button
@@ -140,16 +150,21 @@ const Home = () => {
       </FormControl>
 
       {/* Filtered Task List */}
-      {filteredTasks.length > 0 ? (
+      {tasks.length === 0 ? (
+        <Typography variant="h6" align="center" color="text.secondary" mt={4}>
+          You don’t have any tasks yet. Start by clicking the “Add Task” button
+          above.
+        </Typography>
+      ) : filteredTasks.length === 0 ? (
+        <Typography variant="h6" align="center" color="text.secondary" mt={4}>
+          No tasks found matching your filters or search.
+        </Typography>
+      ) : (
         <TaskList
           tasks={filteredTasks}
           onDeleteClick={handleDeleteConfirmation}
           onToggleTaskStatus={onToggleTaskStatus}
         />
-      ) : (
-        <Typography variant="h6" align="center" color="text.secondary" mt={4}>
-          No tasks found matching your filters or search.
-        </Typography>
       )}
 
       {/* Delete Confirmation Dialog */}

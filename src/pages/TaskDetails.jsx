@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { useNavigate, useParams } from "react-router-dom";
+import { useNavigate, useParams, Link } from "react-router-dom";
 import { addTask, updateTask, deleteTask } from "../features/tasks/tasksSlice";
 import {
   Box,
@@ -18,6 +18,7 @@ import {
   DialogContentText,
   DialogTitle,
 } from "@mui/material";
+import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 
 const TaskDetails = () => {
   const dispatch = useDispatch();
@@ -91,6 +92,9 @@ const TaskDetails = () => {
           variant="h5"
           gutterBottom
         >
+          <Link to={"/"} style={{ marginRight: "2rem" }}>
+            <ArrowBackIcon></ArrowBackIcon>
+          </Link>
           {isNew ? "Add New Task" : "Edit Task"}
         </Typography>
         <form onSubmit={handleSubmit}>
